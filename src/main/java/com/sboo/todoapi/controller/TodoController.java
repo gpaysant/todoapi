@@ -1,7 +1,9 @@
 package com.sboo.todoapi.controller;
 
-import com.sboo.todoapi.model.Todo;
+import com.sboo.todoapi.dto.TodoRequest;
+import com.sboo.todoapi.dto.TodoResponse;
 import com.sboo.todoapi.service.TodoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +20,23 @@ public class TodoController {
     private final TodoService todoService;
 
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos () {
+    public ResponseEntity<List<TodoResponse>> getAllTodos () {
         return ResponseEntity.ok(todoService.getAllTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Todo> getTodo(@PathVariable long id) {
-        return ResponseEntity.ok(todoService.getTodoById(id));
+    public ResponseEntity<TodoResponse> getTodo(@PathVariable long id) {
+        return ResponseEntity.ok(todoService.getTodoResponseById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Todo> createTodo (@RequestBody Todo todo) {
-        return  ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(todo));
+    public ResponseEntity<TodoResponse> createTodo (@Valid @RequestBody TodoRequest todoRequest) {
+        return  ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(todoRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo (@PathVariable long id, @RequestBody Todo todo) {
-        return ResponseEntity.ok(todoService.updateTodo(id, todo));
+    public ResponseEntity<TodoResponse> updateTodo (@PathVariable long id, @Valid @RequestBody TodoRequest todoRequest) {
+        return ResponseEntity.ok(todoService.updateTodo(id, todoRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -44,17 +46,17 @@ public class TodoController {
     }
 
     @GetMapping("/completed")
-    public ResponseEntity<List<Todo>> getTodoCompleted () {
+    public ResponseEntity<List<TodoResponse>> getTodoCompleted () {
         return ResponseEntity.ok(todoService.getCompletedTodos());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Todo>> getByTitle (@RequestParam String keyword) {
+    public ResponseEntity<List<TodoResponse>> getByTitle (@RequestParam String keyword) {
         return ResponseEntity.ok(todoService.searchByTitle(keyword));
     }
 
     @GetMapping("/due")
-    public ResponseEntity<List<Todo>> getByDeadline (@RequestParam LocalDate dateDateLine) {
+    public ResponseEntity<List<TodoResponse>> getByDeadline (@RequestParam LocalDate dateDateLine) {
         return ResponseEntity.ok(todoService.getTodosDueBefore(dateDateLine));
     }
 }
