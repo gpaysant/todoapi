@@ -3,7 +3,9 @@ package com.sboo.todoapi.service;
 import com.sboo.todoapi.dto.TodoRequest;
 import com.sboo.todoapi.dto.TodoResponse;
 import com.sboo.todoapi.exception.TodoNotFoundException;
+import com.sboo.todoapi.model.Category;
 import com.sboo.todoapi.model.Todo;
+import com.sboo.todoapi.repository.CategoryRepository;
 import com.sboo.todoapi.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class TodoService {
 
     private final TodoRepository todoRepository;// final obligatoire !
     // Pas besoin du constructeur, Lombok le génère
+
+    private final CategoryRepository categoryRepository;
 
     public List<TodoResponse> getAllTodos() {
         return todoRepository.findAll().stream().map(this::toResponse).toList();
@@ -67,6 +71,10 @@ public class TodoService {
         todo.setDescription(request.description());
         todo.setCompleted(request.completed() != null ? request.completed() : false);
         todo.setDueDate(request.dueDate());
+        if (request.categoryId() != null) {
+            Category categoryExisting = categoryRepository.findById(request.categoryId()).orElseThrow(() -> new TodoNotFoundException(request.categoryId()));
+            todo.setCategory(categoryExisting);
+        }
         return todo;
     }
 
@@ -77,6 +85,8 @@ public class TodoService {
                 todo.getDescription(),
                 todo.isCompleted(),
                 todo.getCreatedAt(),
-                todo.getDueDate());
+                todo.getDueDate(),
+                todo.getCategory() != null ? todo.getCategory().getName() : null
+        );
     }
 }

@@ -9,5 +9,6 @@ public record TodoResponse(
         String description,
         boolean completed,
         LocalDateTime createdAt,
-        LocalDate dueDate
+        LocalDate dueDate,
+        String categoryName
 ){}

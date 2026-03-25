@@ -28,6 +28,10 @@ public class Todo {
     @Column(columnDefinition = "DATE")
     private LocalDate dueDate;
 
+    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

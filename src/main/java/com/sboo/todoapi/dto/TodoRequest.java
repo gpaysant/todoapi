@@ -9,5 +9,6 @@ public record TodoRequest(
         @NotBlank String title,
         @Size(max = 100) String description,
         Boolean completed,
-        LocalDate dueDate
+        LocalDate dueDate,
+        Long categoryId
 ) {}
