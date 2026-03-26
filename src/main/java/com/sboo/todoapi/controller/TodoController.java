@@ -1,5 +1,6 @@
 package com.sboo.todoapi.controller;
 
+import com.sboo.todoapi.dto.PageResponse;
 import com.sboo.todoapi.dto.TodoRequest;
 import com.sboo.todoapi.dto.TodoResponse;
 import com.sboo.todoapi.service.TodoService;
@@ -19,10 +20,20 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<TodoResponse>> getAllTodos () {
         return ResponseEntity.ok(todoService.getAllTodos());
+    }*/
+    @GetMapping
+    public ResponseEntity<PageResponse<TodoResponse>> getAllTodos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ) {
+        return ResponseEntity.ok(todoService.getAllTodos(page, size, sortBy, sortDir));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<TodoResponse> getTodo(@PathVariable long id) {

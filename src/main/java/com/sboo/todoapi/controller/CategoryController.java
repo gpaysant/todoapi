@@ -2,7 +2,9 @@ package com.sboo.todoapi.controller;
 
 import com.sboo.todoapi.dto.CategoryRequest;
 import com.sboo.todoapi.dto.CategoryResponse;
+import com.sboo.todoapi.dto.TodoResponse;
 import com.sboo.todoapi.service.CategoryService;
+import com.sboo.todoapi.service.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final TodoService todoService;
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories () {
@@ -26,6 +29,11 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById (@PathVariable long id) {
         return ResponseEntity.ok(categoryService.getCategoryResponseById(id));
+    }
+
+    @GetMapping("/{id}/todos")
+    public ResponseEntity<List<TodoResponse>> getTodosByCategory (@PathVariable long id) {
+        return ResponseEntity.ok(todoService.getTodosByCategoryId(id));
     }
 
     @PostMapping
